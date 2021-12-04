@@ -138,7 +138,7 @@ def boats_assigned_removed_loads(boat_id, load_id):
 
         # error check
         if load is None or boat is None:
-            return {"Error": "The specified boat and/or load does not exist"}, 404
+            return {"Error": "The specified boat and/or slip does not exist"}, 404
         elif load[constants.carrier] is not None:
             return {"Error": "The load is already assigned to a boat"}, 403
 

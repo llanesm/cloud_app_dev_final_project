@@ -11,8 +11,8 @@ app.register_blueprint(load.bp)
 
 @app.route('/')
 def index():
-    return "Please navigate to /boats or /loads to use this API"
+    return "Please navigate to /boats or /slips to use this API"
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='localhost', port=8080, debug=True)
