@@ -1,17 +1,52 @@
 from google.cloud import datastore
-from flask import Flask
-import boat
-import load
+from flask import request, render_template, Flask
+import requests
+
+from authlib.integrations.flask_client import OAuth
+
+from blueprints import boat, load, owner
+from configuration import constants
 
 app = Flask(__name__)
-client = datastore.Client()
 app.register_blueprint(boat.bp)
 app.register_blueprint(load.bp)
+app.register_blueprint(owner.bp)
+app.secret_key = 'SECRET_KEY'
+
+client = datastore.Client()
+
+oauth = OAuth(app)
+
+auth0 = oauth.register(
+    'auth0',
+    client_id=constants.CLIENT_ID,
+    client_secret=constants.CLIENT_SECRET,
+    api_base_url="https://" + constants.DOMAIN,
+    access_token_url="https://" + constants.DOMAIN + "/oauth/token",
+    authorize_url="https://" + constants.DOMAIN + "/authorize",
+    client_kwargs={
+        'scope': 'openid profile email',
+    },
+)
 
 
 @app.route('/')
 def index():
-    return "Please navigate to /boats or /slips to use this API"
+    return render_template('welcome.html')
+
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    body = {'grant_type': 'password',
+            'username': request.values['login_email'],
+            'password': request.values['login_password'],
+            'client_id': constants.CLIENT_ID,
+            'client_secret': constants.CLIENT_SECRET
+            }
+    headers = {'content-type': 'application/json'}
+    url = 'https://' + constants.DOMAIN + '/oauth/token'
+    res = requests.post(url, json=body, headers=headers).json()
+    return render_template('user_info.html', jwt=res['id_token'])
 
 
 if __name__ == '__main__':

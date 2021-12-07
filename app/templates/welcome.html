@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth Welcome Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <h1>Welcome!</h1>
+    <h3>User Login</h3>
+    <form method="POST" action="/login">
+        <label for="login_email">Username:</label>
+        <input type="text" id="login_email" name="login_email"><br>
+        <label for="login_password">Password:</label>
+        <input type="text" id="login_password" name="login_password"><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
